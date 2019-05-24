@@ -1,0 +1,32 @@
+version: '2'
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+      - "8081:81"
+    volumes:
+      - ./www:/var/www/html
+    links:
+      - php-fpm
+    command: [nginx, -g, daemon off;]
+  php-fpm:
+    build: ./php
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./www:/var/www/html
+    links:
+      - mysql
+  mysql:
+    build: ./mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: mog
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: mog
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    restart: always
